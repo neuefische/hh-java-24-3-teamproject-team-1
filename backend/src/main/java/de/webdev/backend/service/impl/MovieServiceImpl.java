@@ -1,5 +1,6 @@
 package de.webdev.backend.service.impl;
 
+import de.webdev.backend.dto.MovieDto;
 import de.webdev.backend.model.Movie;
 import de.webdev.backend.repository.MovieRepository;
 import de.webdev.backend.service.MovieService;
@@ -17,5 +18,16 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public List<Movie> getAllMovies() {
         return movieRepository.findAll();
+    }
+
+    @Override
+    public Movie addMovie(MovieDto userEntries){
+        Movie newMovie = new Movie(
+                null,
+                userEntries.title(),
+                userEntries.author()
+        );
+
+        return movieRepository.save(newMovie);
     }
 }
