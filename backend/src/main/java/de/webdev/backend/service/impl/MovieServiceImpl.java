@@ -25,7 +25,9 @@ public class MovieServiceImpl implements MovieService {
         Movie newMovie = new Movie(
                 null,
                 userEntries.title(),
-                userEntries.author()
+                userEntries.author(),
+                userEntries.genre(),
+                userEntries.publicationDate()
         );
 
         return movieRepository.save(newMovie);

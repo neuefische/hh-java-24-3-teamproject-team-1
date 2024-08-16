@@ -37,7 +37,9 @@ class MovieControllerTest {
 
                         {
                         "author": "exampleAuthor",
-                        "title": "exampleTitle"
+                        "title": "exampleTitle",
+                        "genre": "drama",
+                        "publicationDate": "2023-08-16T14:30:00"
                         }
                         """
 
@@ -46,7 +48,9 @@ class MovieControllerTest {
                 .andExpect(MockMvcResultMatchers.content().json("""
                         {
                         "author": "exampleAuthor",
-                        "title": "exampleTitle"
+                        "title": "exampleTitle",
+                        "genre": "drama",
+                        "publicationDate": "2023-08-16T14:30:00"
                         }
 """
                 ))
