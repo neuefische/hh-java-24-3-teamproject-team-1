@@ -18,11 +18,12 @@ public class MovieController {
     private final MovieService movieService;
 
     @GetMapping()
+
     public List<Movie> getMovies() {
         return movieService.getAllMovies();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     public Movie getMovieById(@PathVariable String id) {
         return movieService.getMovieById(id);
     }
