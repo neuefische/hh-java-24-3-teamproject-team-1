@@ -4,7 +4,7 @@ import de.webdev.backend.dto.MovieDto;
 import de.webdev.backend.model.Movie;
 import de.webdev.backend.service.MovieService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+
 
 import org.springframework.web.bind.annotation.*;
 
@@ -25,12 +25,9 @@ public class MovieController {
 
 
     @GetMapping("{id}")
-    public ResponseEntity<Movie> getMovieById(@PathVariable String id) {
-        Movie movie = movieService.getMovieById(id);
-        if (movie == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(movie);
+    public Movie getMovieById(@PathVariable String id) {
+        return movieService.getMovieById(id);
+
     }
     @PostMapping()
     public Movie postMovie (@RequestBody MovieDto userEntries) {

@@ -36,12 +36,6 @@ class MovieControllerTest {
     }
 
 
-    @Test
-    @DirtiesContext
-    void getMovieById_shouldReturnNotFound_whenIdDoesNotExist() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/movies/999"))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
-    }
 
     @Test
     @DirtiesContext
