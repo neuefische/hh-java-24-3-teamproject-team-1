@@ -6,13 +6,22 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+
 import org.springframework.boot.test.mock.mockito.MockBean;
+
+import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
+
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -25,6 +34,7 @@ class MovieControllerTest {
     private MovieService movieService;
 
     @Test
+    @DirtiesContext
     void getMovie_shouldRetunEmptyList_whenCallInitially() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/movies"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -46,5 +56,33 @@ class MovieControllerTest {
         when(movieService.getMovieById("999")).thenReturn(null);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/movies/999"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
+
+    @DirtiesContext
+    void postMovie_shouldReturnANewMovie() throws Exception{
+        mockMvc.perform(MockMvcRequestBuilders
+                .post("/api/movies")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+
+                        {
+                        "author": "exampleAuthor",
+                        "title": "exampleTitle",
+                        "genre": "drama",
+                        "publicationDate": "2023-08-16T14:30:00"
+                        }
+                        """
+
+                ))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json("""
+                        {
+                        "author": "exampleAuthor",
+                        "title": "exampleTitle",
+                        "genre": "drama",
+                        "publicationDate": "2023-08-16T14:30:00"
+                        }
+"""
+                ))
+                .andExpect(jsonPath("$.id").exists());
     }
 }
