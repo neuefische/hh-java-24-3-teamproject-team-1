@@ -9,4 +9,6 @@ public interface MovieService {
     List<Movie> getAllMovies();
 
     Movie addMovie(MovieDto userEntries);
+
+    Movie updateMovie(MovieDto updateMovie, String id);
 }
