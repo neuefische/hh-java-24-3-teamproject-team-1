@@ -6,10 +6,12 @@ import de.webdev.backend.service.MovieService;
 import lombok.RequiredArgsConstructor;
 
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/movies")
@@ -25,12 +27,15 @@ public class MovieController {
 
 
     @GetMapping("{id}")
-    public Movie getMovieById(@PathVariable String id) {
-        return movieService.getMovieById(id);
+    public ResponseEntity<Movie> getMovieById(@PathVariable String id) {
+        Optional<Movie> movieOptional = Optional.ofNullable(movieService.getMovieById(id));
+        return movieOptional.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
 
     }
+
     @PostMapping()
-    public Movie postMovie (@RequestBody MovieDto userEntries) {
+    public Movie postMovie(@RequestBody MovieDto userEntries) {
         return movieService.addMovie(userEntries);
 
     }
