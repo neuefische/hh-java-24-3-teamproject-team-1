@@ -1,5 +1,7 @@
 package de.webdev.backend.controller;
 
+import de.webdev.backend.model.Movie;
+import de.webdev.backend.repository.MovieRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -10,6 +12,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.time.LocalDateTime;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
@@ -18,6 +22,10 @@ class MovieControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private MovieRepository movieRepository;
+
+    private final LocalDateTime localDateTime = LocalDateTime.now();
 
     @Test
     @DirtiesContext
@@ -55,5 +63,32 @@ class MovieControllerTest {
 """
                 ))
                 .andExpect(jsonPath("$.id").exists());
+    }
+
+    @Test
+    @DirtiesContext
+    void updateMovie_whenIdExists_shouldUpdateMovie() throws Exception {
+        movieRepository.save(new Movie("1", "title", "author", "genre", localDateTime));
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/movies/1")
+        .contentType(MediaType.APPLICATION_JSON)
+                .content(String.format("""
+                        {
+                          "title": "exampleTitle",
+                          "author": "exampleAuthor",
+                          "genre": "exampleGenre",
+                          "publicationDate": "%s"
+                        }
+                        """, localDateTime)
+                ))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(String.format("""
+                        {
+                          "title": "exampleTitle",
+                          "author": "exampleAuthor",
+                          "genre": "exampleGenre",
+                          "publicationDate": "%s"
+                        }
+                        """, localDateTime.toString().replaceFirst("0*$",""))));
     }
 }

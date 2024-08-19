@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -39,7 +40,6 @@ class MovieServiceImplTest {
     @Test
     void addMovie() {
 
-
         MovieDto movieDto = new MovieDto("exampleTitle", "exampleAuthor", "exampleGenre", publicationDate);
         Movie movie = new Movie(null, "exampleTitle", "exampleAuthor", "exampleGenre", publicationDate);
 
@@ -51,6 +51,27 @@ class MovieServiceImplTest {
         verify(movieRepository).save(movie);
 
         assertEquals(movie, result);
+    }
 
+    @Test
+    void updateMovie_whenMovieExists_shouldUpdateAndReturnMovie() {
+        //GIVEN
+        String id = "123";
+        MovieDto movieDto = new MovieDto("exampleTitle", "exampleAuthor", "exampleGenre", publicationDate);
+        Movie movie = new Movie(id, "exampleTitle", "exampleAuthor", "exampleGenre", publicationDate);
+
+        // Mocking the findById method to return the movie when it is called
+        when(movieRepository.findById(id)).thenReturn(Optional.of(movie));
+
+        // Mocking the save method to return the movie after it is saved
+        when(movieRepository.save(movie)).thenReturn(movie);
+
+        //WHEN
+        Movie actual = movieService.updateMovie(movieDto, id);
+
+        //THEN
+        verify(movieRepository).findById(id);
+        verify(movieRepository).save(movie);
+        assertEquals(movie, actual);
     }
 }
