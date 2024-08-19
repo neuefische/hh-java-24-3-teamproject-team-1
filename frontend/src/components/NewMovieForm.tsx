@@ -1,7 +1,9 @@
 import axios from "axios";
 import {FormEvent} from "react";
+import {useNavigate} from "react-router-dom";
 
 export default function NewMovieForm() {
+const navigate = useNavigate()
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault()
@@ -19,6 +21,7 @@ export default function NewMovieForm() {
         } catch (error) {
             console.error('There was an error adding the movie:', error);
         }
+        navigate("/movies")
     }
 
     return (

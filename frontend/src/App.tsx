@@ -1,14 +1,17 @@
 import './App.css'
 import ViewAllMovies from "./components/ViewAllMovies.tsx";
 import NewMovieForm from "./components/NewMovieForm.tsx";
+import {Route, Routes} from "react-router-dom";
 
 function App() {
 
+
+
   return (
-    <>
-        <ViewAllMovies/>
-        <NewMovieForm/>
-    </>
+    <Routes>
+        <Route path="/movies" element={<ViewAllMovies/>}/>
+        <Route path="/movies/add" element={<NewMovieForm/>}/>
+    </Routes>
   )
 }
 
