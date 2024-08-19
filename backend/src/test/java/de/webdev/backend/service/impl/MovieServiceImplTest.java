@@ -40,7 +40,7 @@ class MovieServiceImplTest {
     @Test
 
     void getMovieById_shouldReturnMovie_whenIdExists() {
-        Movie movie = new Movie("1", "First movie", "First author");
+        Movie movie = new Movie("1", "First movie", "First author",  "exampleGenre", publicationDate);
         when(movieRepository.findById("1")).thenReturn(Optional.of(movie));
 
         Movie actual = movieService.getMovieById("1");
@@ -57,7 +57,8 @@ class MovieServiceImplTest {
 
         assertNull(actual);
         verify(movieRepository).findById("999");
-
+    }
+    @Test
     void addMovie() {
 
 

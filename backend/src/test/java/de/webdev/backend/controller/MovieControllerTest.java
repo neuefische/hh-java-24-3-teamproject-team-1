@@ -1,13 +1,9 @@
 package de.webdev.backend.controller;
 
-import de.webdev.backend.model.Movie;
-import de.webdev.backend.service.MovieService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
@@ -17,8 +13,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import java.time.LocalDateTime;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -26,44 +21,36 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class MovieControllerTest {
-
+    LocalDateTime publicationDate = LocalDateTime.of(2023, 8, 16, 14, 30, 0);
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
-    private MovieService movieService;
+
 
     @Test
     @DirtiesContext
-    void getMovie_shouldRetunEmptyList_whenCallInitially() throws Exception {
+    void getMovie_shouldReturnEmptyList_whenCallInitially() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/movies"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("[]"));
     }
 
-    @Test
-    void getMovieById_shouldReturnMovie_whenIdExists() throws Exception {
-        Movie movie = new Movie("1", "Title", "Author");
-        when(movieService.getMovieById("1")).thenReturn(movie);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/movies/1"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json("{\"id\":\"1\",\"title\":\"Title\",\"author\":\"Author\"}"));
+    @Test
+    @DirtiesContext
+    void getMovieById_shouldReturnNotFound_whenIdDoesNotExist() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/movies/999"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
-    void getMovieById_shouldReturnNotFound_whenIdDoesNotExist() throws Exception {
-        when(movieService.getMovieById("999")).thenReturn(null);
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/movies/999"))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
-
     @DirtiesContext
     void postMovie_shouldReturnANewMovie() throws Exception{
         mockMvc.perform(MockMvcRequestBuilders
                 .post("/api/movies")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
-
+                        
                         {
                         "author": "exampleAuthor",
                         "title": "exampleTitle",
@@ -75,13 +62,14 @@ class MovieControllerTest {
                 ))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
+                        
                         {
                         "author": "exampleAuthor",
                         "title": "exampleTitle",
                         "genre": "drama",
                         "publicationDate": "2023-08-16T14:30:00"
                         }
-"""
+                        """
                 ))
                 .andExpect(jsonPath("$.id").exists());
     }

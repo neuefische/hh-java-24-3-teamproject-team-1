@@ -19,7 +19,6 @@ public class MovieController {
     private final MovieService movieService;
 
     @GetMapping()
-
     public List<Movie> getMovies() {
         return movieService.getAllMovies();
     }
@@ -27,14 +26,14 @@ public class MovieController {
 
     @GetMapping("{id}")
     public ResponseEntity<Movie> getMovieById(@PathVariable String id) {
-        Movie movie= movieService.getMovieById(id);
+        Movie movie = movieService.getMovieById(id);
         if (movie == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(movie);
-
+    }
     @PostMapping()
-    public Movie postMovie(@RequestBody MovieDto userEntries){
+    public Movie postMovie (@RequestBody MovieDto userEntries) {
         return movieService.addMovie(userEntries);
 
     }
