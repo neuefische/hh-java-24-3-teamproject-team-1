@@ -27,8 +27,6 @@ class MovieControllerTest {
 
 
 
-
-
     @Test
     @DirtiesContext
     void getMovie_shouldReturnEmptyList_whenCallInitially() throws Exception {
