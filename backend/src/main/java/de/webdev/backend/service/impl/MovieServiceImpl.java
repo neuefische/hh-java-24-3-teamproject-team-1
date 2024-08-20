@@ -1,6 +1,7 @@
 package de.webdev.backend.service.impl;
 
 import de.webdev.backend.dto.MovieDto;
+import de.webdev.backend.exception.MovieNotFoundException;
 import de.webdev.backend.model.Movie;
 import de.webdev.backend.repository.MovieRepository;
 import de.webdev.backend.service.MovieService;
@@ -37,5 +38,14 @@ public class MovieServiceImpl implements MovieService {
 
         return movieRepository.save(newMovie);
 
+    }
+
+    @Override
+    public String deleteMovie(String id) throws MovieNotFoundException{
+        if(!movieRepository.existsById(id)){
+            throw new MovieNotFoundException(id);
+        }
+        movieRepository.deleteById(id);
+        return id;
     }
 }

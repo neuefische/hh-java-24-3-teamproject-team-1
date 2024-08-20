@@ -1,6 +1,7 @@
 package de.webdev.backend.service.impl;
 
 import de.webdev.backend.dto.MovieDto;
+import de.webdev.backend.exception.MovieNotFoundException;
 import de.webdev.backend.model.Movie;
 import de.webdev.backend.repository.MovieRepository;
 import de.webdev.backend.service.MovieService;
@@ -74,6 +75,38 @@ class MovieServiceImplTest {
 
         assertEquals(movie, result);
 
+    }
+
+
+    @Test
+    void deleteMovie() {
+
+        Movie movie = new Movie("1", "exampleTitle", "exampleAuthor", "exampleGenre", publicationDate);
+
+        when(movieRepository.existsById(movie.id())).thenReturn(true);
+        doNothing().when(movieRepository).deleteById(movie.id());
+
+        String result = movieService.deleteMovie(movie.id());
+
+        verify(movieRepository).existsById(movie.id());
+        verify(movieRepository).deleteById(movie.id());
+
+        assertEquals(movie.id(), result);
+    }
+
+    @Test
+    void throwException_deleteExpense() {
+
+        Movie movie = new Movie("99", "exampleTitle", "exampleAuthor", "exampleGenre", publicationDate);
+
+        when(movieRepository.existsById(movie.id())).thenReturn(false);
+
+
+        assertThrows(MovieNotFoundException.class, (()-> movieService.deleteMovie(movie.id())));
+
+        verify(movieRepository).existsById(movie.id());
+        verify(movieRepository, never()).deleteById(movie.id());
 
     }
+
 }

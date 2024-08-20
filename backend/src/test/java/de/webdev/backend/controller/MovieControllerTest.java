@@ -1,5 +1,7 @@
 package de.webdev.backend.controller;
 
+import de.webdev.backend.model.Movie;
+import de.webdev.backend.repository.MovieRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -13,17 +15,20 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 
-
+import java.time.LocalDateTime;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc  
 class MovieControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private MovieRepository movieRepository;
 
 
 
@@ -72,5 +77,22 @@ class MovieControllerTest {
                         """
                 ))
                 .andExpect(jsonPath("$.id").exists());
+    }
+
+    @Test
+    @DirtiesContext
+    void deleteMovie() throws Exception{
+        Movie movie = new Movie(
+                "1",
+                "titleExample",
+                "authorExample",
+                "genreExample",
+                LocalDateTime.of(2024, 1, 1, 12, 30)
+        );
+        movieRepository.save(movie);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .delete("/api/movies/1"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 }
