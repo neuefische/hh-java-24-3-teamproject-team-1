@@ -33,10 +33,15 @@ public class MovieController {
 
     }
 
-
     @PostMapping()
     public Movie postMovie (@RequestBody MovieDto userEntries) {
         return movieService.addMovie(userEntries);
 
     }
+
+    @DeleteMapping("{id}")
+    public String deleteMovie(@PathVariable String id){
+        return movieService.deleteMovie(id);
+    }
+
 }

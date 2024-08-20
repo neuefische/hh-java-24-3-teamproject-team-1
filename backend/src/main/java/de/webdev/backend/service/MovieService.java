@@ -10,4 +10,5 @@ public interface MovieService {
     Movie getMovieById(String id);
     Movie addMovie(MovieDto userEntries);
 
+    String deleteMovie(String id);
 }
