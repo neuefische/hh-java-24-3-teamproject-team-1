@@ -37,12 +37,20 @@ class MovieControllerTest {
 
     @Test
     @DirtiesContext
+    void getMovieById_shouldReturnIsNotFound_whenMovieDoesNotExist() throws Exception {
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/movies/1"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    @DirtiesContext
     void postMovie_shouldReturnANewMovie() throws Exception{
         mockMvc.perform(MockMvcRequestBuilders
                 .post("/api/movies")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
-
+                        
                         {
                         "author": "exampleAuthor",
                         "title": "exampleTitle",
@@ -54,6 +62,7 @@ class MovieControllerTest {
                 ))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
+                        
                         {
                         "author": "exampleAuthor",
                         "title": "exampleTitle",
