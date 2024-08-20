@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 
-import java.time.LocalDateTime;
+
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -21,9 +21,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class MovieControllerTest {
-    LocalDateTime publicationDate = LocalDateTime.of(2023, 8, 16, 14, 30, 0);
+
     @Autowired
     private MockMvc mockMvc;
+
+
 
 
 
@@ -35,11 +37,11 @@ class MovieControllerTest {
                 .andExpect(MockMvcResultMatchers.content().json("[]"));
     }
 
-
     @Test
     @DirtiesContext
-    void getMovieById_shouldReturnNotFound_whenIdDoesNotExist() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/movies/999"))
+    void getMovieById_shouldReturnIsNotFound_whenMovieDoesNotExist() throws Exception {
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/movies/1"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
