@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -37,6 +38,27 @@ class MovieServiceImplTest {
     }
 
     @Test
+
+    void getMovieById_shouldReturnMovie_whenIdExists() {
+        Movie movie = new Movie("1", "First movie", "First author",  "exampleGenre", publicationDate);
+        when(movieRepository.findById("1")).thenReturn(Optional.of(movie));
+
+        Movie actual = movieService.getMovieById("1");
+
+        assertEquals(movie, actual);
+        verify(movieRepository).findById("1");
+    }
+
+    @Test
+    void getMovieById_shouldReturnNull_whenIdDoesNotExist() {
+        when(movieRepository.findById("999")).thenReturn(Optional.empty());
+
+        Movie actual = movieService.getMovieById("999");
+
+        assertNull(actual);
+        verify(movieRepository).findById("999");
+    }
+    @Test
     void addMovie() {
 
 
@@ -51,6 +73,7 @@ class MovieServiceImplTest {
         verify(movieRepository).save(movie);
 
         assertEquals(movie, result);
+
 
     }
 }

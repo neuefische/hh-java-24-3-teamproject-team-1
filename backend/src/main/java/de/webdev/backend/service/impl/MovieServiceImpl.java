@@ -20,6 +20,11 @@ public class MovieServiceImpl implements MovieService {
         return movieRepository.findAll();
     }
 
+
+    @Override
+    public Movie getMovieById(String id) {
+        return movieRepository.findById(id).orElse(null);
+    }
     @Override
     public Movie addMovie(MovieDto userEntries){
         Movie newMovie = new Movie(
@@ -31,5 +36,6 @@ public class MovieServiceImpl implements MovieService {
         );
 
         return movieRepository.save(newMovie);
+
     }
 }

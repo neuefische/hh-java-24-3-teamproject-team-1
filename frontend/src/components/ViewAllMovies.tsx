@@ -1,10 +1,11 @@
-import {useEffect,useState} from "react";
+import {useEffect, useState} from "react";
 import axios from 'axios';
-
 import {Movie} from "../models/movie.tsx";
+import {Link} from "react-router-dom";
 
 export default function ViewAllMovies() {
-        const [movies, setMovies] = useState<Movie[]>([]);
+    const [movies, setMovies] = useState<Movie[]>([]);
+
 
     const fetchData = () => {
         axios.get('/api/movies')
@@ -20,11 +21,17 @@ export default function ViewAllMovies() {
         fetchData();
 
     }, []);
+
+
     return (
         <>
             {movies.map((movie) => (
-                <h2 key={movie.id}>{movie.title} by {movie.author}</h2>
+                <div key={movie.id}>
+                    <h2>{movie.title} by {movie.author}</h2>
+                    <Link to={`/movies/${movie.id}`}>View Details</Link>
+                </div>
             ))}
         </>
     )
 }
+
