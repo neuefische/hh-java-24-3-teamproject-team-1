@@ -82,7 +82,7 @@ jobs:
     needs: push-to-docker-hub
     environment:
       name: Capstone Project # Capstone Project name
-      url: https://neuefische.de/ # Link to deployment
+      url: https://hh-java-24-3-project-team-1.onrender.com/ # Link to deployment
     steps:
       - name: Trigger Render.com Deployment
         run: |
