@@ -6,35 +6,30 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
-
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
 
 import java.time.LocalDateTime;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-
 @SpringBootTest
-@AutoConfigureMockMvc  
+@AutoConfigureMockMvc
 class MovieControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     private MovieRepository movieRepository;
 
-
+    private final LocalDateTime localDateTime = LocalDateTime.now();
 
     @Test
     @DirtiesContext
-    void getMovie_shouldReturnEmptyList_whenCallInitially() throws Exception {
+    void getMovie_shouldRetunEmptyList_whenCallInitially() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/movies"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("[]"));
@@ -74,7 +69,7 @@ class MovieControllerTest {
                         "genre": "drama",
                         "publicationDate": "2023-08-16T14:30:00"
                         }
-                        """
+"""
                 ))
                 .andExpect(jsonPath("$.id").exists());
     }
@@ -94,5 +89,32 @@ class MovieControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                 .delete("/api/movies/1"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @DirtiesContext
+    void updateMovie_whenIdExists_shouldUpdateMovie() throws Exception {
+        movieRepository.save(new Movie("1", "title", "author", "genre", localDateTime));
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/movies/1")
+        .contentType(MediaType.APPLICATION_JSON)
+                .content(String.format("""
+                        {
+                          "title": "exampleTitle",
+                          "author": "exampleAuthor",
+                          "genre": "exampleGenre",
+                          "publicationDate": "%s"
+                        }
+                        """, localDateTime)
+                ))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(String.format("""
+                        {
+                          "title": "exampleTitle",
+                          "author": "exampleAuthor",
+                          "genre": "exampleGenre",
+                          "publicationDate": "%s"
+                        }
+                        """, localDateTime.toString().replaceFirst("0*$",""))));
     }
 }

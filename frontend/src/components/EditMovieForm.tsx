@@ -1,9 +1,10 @@
 import axios from "axios";
 import {FormEvent} from "react";
 import {useNavigate} from "react-router-dom";
+import {Movie} from "../models/movie.tsx";
 
-export default function NewMovieForm() {
-const navigate = useNavigate()
+export default function NewMovieForm({defaultMovie}:{defaultMovie:Movie}) {
+    const navigate = useNavigate()
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault()
@@ -11,7 +12,7 @@ const navigate = useNavigate()
         const data = Object.fromEntries(fd);
 
         try {
-            const response = await axios.post("/api/movies", {
+            const response = await axios.put(`/api/movies/${defaultMovie.id}`, {
                 author: data.author,
                 title: data.title,
                 genre: data.genre,
@@ -24,17 +25,18 @@ const navigate = useNavigate()
         navigate("/")
     }
 
+
     return (
-        <form onSubmit={handleSubmit} method="post">
+        <form onSubmit={handleSubmit} method="put">
             <label htmlFor="title">Title: </label>
-            <input type="text" name="title"/>
+            <input type="text" name="title" defaultValue={defaultMovie.title}/>
             <label htmlFor="author">Author: </label>
-            <input type="text" name="author"/>
+            <input type="text" name="author" defaultValue={defaultMovie.author}/>
             <label htmlFor="genre">Genre: </label>
-            <input type="text" name="genre"/>
+            <input type="text" name="genre" defaultValue={defaultMovie.genre}/>
             <label htmlFor="publicationDate">Publication date: </label>
-            <input type="datetime-local" name="publicationDate"/>
-            <button>ADD</button>
+            <input type="datetime-local" name="publicationDate" defaultValue={defaultMovie.publicationDate.toString()}/>
+            <button>Edit</button>
         </form>
     )
 }
