@@ -42,11 +42,20 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public Movie updateMovie(MovieDto updateMovie, String id) {
-        Movie movie = movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundException(String.format("Movie with id: %s not found!", id)))
+        Movie movie = movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundException(id))
                 .withAuthor(updateMovie.author())
                 .withGenre(updateMovie.genre())
                 .withTitle(updateMovie.title())
                 .withPublicationDate(updateMovie.publicationDate());
         return movieRepository.save(movie);
+    }
+
+    @Override
+    public String deleteMovie(String id) throws MovieNotFoundException{
+        if(!movieRepository.existsById(id)){
+            throw new MovieNotFoundException(id);
+        }
+        movieRepository.deleteById(id);
+        return id;
     }
 }

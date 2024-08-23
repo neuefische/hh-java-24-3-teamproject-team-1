@@ -76,6 +76,23 @@ class MovieControllerTest {
 
     @Test
     @DirtiesContext
+    void deleteMovie() throws Exception{
+        Movie movie = new Movie(
+                "1",
+                "titleExample",
+                "authorExample",
+                "genreExample",
+                LocalDateTime.of(2024, 1, 1, 12, 30)
+        );
+        movieRepository.save(movie);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .delete("/api/movies/1"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @DirtiesContext
     void updateMovie_whenIdExists_shouldUpdateMovie() throws Exception {
         movieRepository.save(new Movie("1", "title", "author", "genre", localDateTime));
 
