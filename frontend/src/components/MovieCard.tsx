@@ -2,11 +2,12 @@ import axios from "axios";
 import {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import EditMovieForm from "./EditMovieForm.tsx";
+import {Movie} from "../models/movie.tsx";
 
 export default function MovieCard() {
     const navigate = useNavigate()
     const {id} = useParams();
-    const [movie, setMovie] = useState();
+    const [movie, setMovie] = useState<Movie>();
     async function fetchMovie() {
         try {
             const response = await axios.get(`/api/movies/${id}`);
@@ -20,7 +21,7 @@ export default function MovieCard() {
         try {
             const response = await axios.delete(`/api/movies/${id}`)
             console.log("Movie deleted successfully:", response.statusText)
-            navigate("/movies")
+            navigate("/")
 
         } catch (error) {
             console.log("There was an error deleting the movie:", error)
@@ -33,7 +34,7 @@ export default function MovieCard() {
     }, [id]);
 
     function handleDelete() {
-        deleteFunction(movie.id);
+        deleteFunction(movie!.id);
     }
 
     if (!movie) return (<p>Is loading...!</p>);
